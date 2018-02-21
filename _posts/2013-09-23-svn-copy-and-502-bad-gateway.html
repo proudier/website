@@ -1,0 +1,23 @@
+---
+layout: post
+title: SVN, COPY and '502 Bad Gateway'
+categories:
+- Development
+tags:
+- HTTPd
+- SVN
+comments: []
+---
+<p>I recently moved a SVN server behind a reverse proxy. Check-outing and committing new or edited files worked fine; but moving a resource did not<!--more-->:</p>
+<p><code>[pierre@T420 trunk]$ svn commit -m "blabla"<br />
+# [...]<br />
+Adding  (bin)  cas-server-webapp/src/main/resources-ppr/cas.keytab<br />
+svn: E175002: Commit failed (details follow):<br />
+svn: E175002: COPY request on '/restricted/svn/cas-server_merge/.keytab' failed: 502 Bad Gateway</code></p>
+<p>The connection to the reverse-proxy is made over https. The connection to the SVN, from the reverse-proxy, is over HTTP. I'm not using the SVN protocol but the DAV extensions of the HTTP protocol.<br />
+Both the reserve-proxy and the SVN are instances of Apache HTTPd.</p>
+<p>A quick solution is to add the following piece of configuration to the SVN instance of HTTPd:<br />
+<code>RequestHeader edit Destination ^https: http: early</code></p>
+<p>Don't forget to load mod_headers. It's done by default on RHEL (RedHat)<br />
+<code>LoadModule headers_module modules/mod_headers.so</code></p>
+<p><a href="http://www.dscentral.in/2013/04/04/502-bad-gateway-svn-copy-reverse-proxy/" target="_blank">That blog story</a> goes into more details.</p>

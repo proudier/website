@@ -1,0 +1,48 @@
+---
+layout: post
+title: A BitTorrent Client on your Server
+categories:
+- Administration
+tags:
+- Linux
+- CentOS
+- RHEL
+- Bittorent
+- Transmission
+comments: []
+---
+<p>This post describe how to install the <a href="http://www.transmissionbt.com" target="_blank">Transmission BitTorrent client</a> on a headless, remote server. You'll be able to add new downloads via a web interface and mobile apps, such as <a href="https://play.google.com/store/apps/details?id=com.neogb.rtac&amp;hl=fr" target="_blank">Remote Transmission</a>.<!--more--></p>
+<p>The installation is based on RedHat Entreprise Linux (aka RHEL, and derivatives CentOS, Scientific Linux, ...)</p>
+<p>You need the <a href="https://fedoraproject.org/wiki/EPEL" target="_blank">EPEL repository</a> to be configured on your system.</p>
+<p>Installation using YUM:</p>
+<pre>yum install transmission-deamon</pre>
+<p>Just to make sure...</p>
+<pre>service transmission-daemon stop</pre>
+<p>The RPM creates a "transmission" user, whose default home is at <code>/var/lib/transmission</code>.<br />
+Let's move everything related to P2P to a dedicated partition (mounted at <code>/mnt/storage/</code>)</p>
+<pre>usermod -m -d /mnt/storage/transmission/ transmission</pre>
+<p>Edit <code>/etc/sysconfig/transmission-daemon</code> with a text editor.</p>
+<p>Uncomment <code>TRANSMISSION_HOME</code> and set a proper value (here <code>/mnt/storage/transmission</code>)</p>
+<p>Also, we are going to configure the logging facilities of the daemon: uncomment <code>DAEMON_ARGS</code> and append <code>" --logfile=/var/log/transmission.log"</code></p>
+<p>Now your <code>/etc/sysconfig/transmission-daemon</code> you should like this:</p>
+<pre>TRANSMISSION_HOME=/mnt/storage/transmission/
+# DAEMON_USER="foo"
+DAEMON_ARGS="-T --blocklist -g $TRANSMISSION_HOME/.config/transmission-daemon --logfile=/var/log/transmission.log"</pre>
+<p>Save the file and exit your editor.</p>
+<p>Prepare the log file:</p>
+<pre>touch /var/log/transmission.log
+chown transmission:transmission /var/log/transmission.log</pre>
+<p>Now start then stop the daemon, so that it creates a default configuration file:</p>
+<pre>service transmission-daemon start
+service transmission-daemon stop</pre>
+<p>The configuration file is <code>/mnt/storage/transmission/.config/transmission-daemon/settings.json</code>. As the extension suggests, the <a href="http://en.wikipedia.org/wiki/JSON" target="_blank">JavaScript Object Notation</a> is used. </p>
+<p>Open the file with a text editor. </p>
+<p>To be able to access the web interface remotly, you have to either<br />
+set <code>rpc-whitelist-enabled</code> to <code>false</code>, or or edit <code>rpc-whitelist</code></p>
+<p>You can tweak other parameters, such as the maximum upload speed (<code>speed-limit-up</code>).</p>
+<p>Save the file and exit your editor.</p>
+<p>If needed, open the required ports on your firewall. The remote interface port is TCP 9091.</p>
+<p>Finally:</p>
+<pre>service transmission-daemon start
+chkconfig transmission-daemon on</pre>
+<p>Test you setup by connecting to http://${IP}:9091 with a browser.</p>

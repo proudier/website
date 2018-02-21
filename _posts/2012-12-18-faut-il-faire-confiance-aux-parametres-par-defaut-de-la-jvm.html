@@ -1,0 +1,15 @@
+---
+layout: post
+title: Faut-il faire confiance aux param&egrave;tres par d&eacute;faut de la JVM?
+categories:
+- Development
+tags:
+- Java
+- JVM
+comments: []
+---
+<p>D'apr&egrave;s <a href="http://plumbr.eu/blog/should-you-trust-the-default-settings-in-jvm">cet article de Nikita Salnikov Tarnovski</a>, la r&eacute;ponse est non.</p>
+<p>Et pour cause, il a fait l'exp&eacute;rience d'une JVM qui s&eacute;lectionnait le <code>SerialGC</code> sur un OS 64bits!<!--more--></p>
+<blockquote><p>The GC used by our JVM was in fact Serial GC. Which, if you have carefully followed our post should not be the case &ndash; 64-bit Linux machines should always be considered server-class machines and the GC used should be Parallel GC.</p></blockquote>
+<p>Dans son cas, il semble que le nombre de CPU a pris le pas sur la plateforme.</p>
+<p>Bonne lecture!</p>

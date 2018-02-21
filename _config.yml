@@ -1,0 +1,26 @@
+title: Pierre Roudier's blog
+description: Linux Environments and Java Technologies
+url: "https://pierreroudier.net"
+
+author:
+  name:         Pierre Roudier
+  url:          https://pierreroudier.net
+  email:        pierre@roudier.io
+
+email: pierre@roudier.io
+twitter_username: proudier
+github_username:  proudier
+
+exclude:
+  - wp-mig.sh
+
+
+markdown: kramdown
+theme: tale
+
+plugins:
+  - jekyll-feed
+  - jekyll-paginate
+  - jekyll-minifier
+permalink: /:year-:month-:day/:title
+paginate:  10

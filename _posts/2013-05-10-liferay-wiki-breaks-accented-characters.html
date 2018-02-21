@@ -1,0 +1,40 @@
+---
+layout: post
+title: Liferay Wiki breaks accented characters
+categories:
+- Administration
+tags:
+- Liferay
+- Tomcat
+- i18n
+comments:
+- id: 8
+  content: Youhou ! Je suis une star !
+- id: 9
+  content: "&ldquo;Cobaye&rdquo; me semblerait plus juste ;-)"
+---
+<p>Liferay 6.1 GA1 is unable to properly display special characters (such as accented characters) inside wikis on Tomcat 6 + Java 6.</p>
+<p>How to reproduce: edit a wiki and insert the name "J&eacute;r&ocirc;me" then publish. The page is refreshed but instead of "J&eacute;r&ocirc;me", "J&Atilde;&copy;r&Atilde;&acute;me" is shown.<br />
+Notice how it looks like UTF-8 being interpreted as ISO-8859-1.<!--more--></p>
+<p>An inspection of the database led me to notice that the content is already corrupted in the database. Therefore the problem does not lie in the rendering of the wiki but in the editing.</p>
+<p>Using <a href="http://code.google.com/p/httpfox/" target="_blank">HttpFox</a>, I checked whether the content is properly sent to the server. It is, using a POST request (so far, so good).</p>
+<p>Googling something like "UTF8 corruption POST Tomcat", I found the following in <a href="http://wiki.apache.org/tomcat/FAQ/CharacterEncoding#Q3" target="_blank">Tomcat's FAQ</a>:</p>
+<blockquote><p>POST requests should specify the encoding of the parameters and values they send. Since many clients fail to set an explicit encoding, the default is used (ISO-8859-1).</p></blockquote>
+<p>It turns out Tomcat was the one messing with the UTF-8 content; by interpreting it as ISO-8859-1.</p>
+<p>The solution is to use a <code>javax.servlet.Filter</code> which will take care of the conversion.<br />
+The Spring dependency <code>spring-web.jar</code>, embedded in Liferay's <code>WEB-INF/lib</code>, provides such a filter.<br />
+The class is <code>org.springframework.web.filter.CharacterEncodingFilter</code></p>
+<p>Edit Liferay's <code>web.xml</code> file and add the following:<br />
+[xml toolbar=false]</p>
+<p>characterEncodingFilter<br />
+org.springframework.web.filter.CharacterEncodingFilter</p>
+<p>encoding UTF-8<br />
+force-encoding true</p>
+<p><!-- Other filter declarations --><br />
+characterEncodingFilter<br />
+/*</p>
+<p><!-- Other filter-mapping declarations --><br />
+[/xml]</p>
+<p>Now on, the content of POST request is passed to Liferay as UTF-8 text and accented characters are displayed as expected in wikis.</p>
+<p>Note: the filter-mapping declaration should be the first of your list. Order is important. See <a href="http://wiki.apache.org/tomcat/FAQ/CharacterEncoding#Q3" target="_blank">Tomcat's FAQ</a> for an explanation.</p>
+<p>Note2: I could not reproduce this issue using the non-blocking Java connector (<code>Http11NioProtocol</code>) nor the AJP original blocking Java connector (<code>JkCoyoteHandler</code>). Did not try using any APR connector.</p>

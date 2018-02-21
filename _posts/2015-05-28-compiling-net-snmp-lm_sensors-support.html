@@ -1,0 +1,36 @@
+---
+layout: post
+title: Compiling net-snmp with lm_sensors support
+categories:
+- Administration
+tags:
+- ArchLinux
+- snmp
+- lm_sensors
+- monitoring
+comments: []
+---
+<p>The official ArchLinux package for <a href="http://www.net-snmp.org/" target="_blank" rel="noopener">net-snmp</a> does not come with <a href="http://www.lm-sensors.org/" target="_blank" rel="noopener">lm_sensors</a> support, consequently the corresponding MIB is missing. Here is how to customize and compile the package to get sensors suppors.<!--more--></p>
+<p>We will&nbsp;use&nbsp;the&nbsp;<a href="https://wiki.archlinux.org/index.php/Arch_Build_System" target="_blank" rel="noopener">Arch Build System</a> (ABS) do<br />
+First, install and run ABS to&nbsp;retrieve the&nbsp;PKGBUILD scripts from the Arch Linux repositories:</p>
+<pre>shell> pacman -S abs base-devel
+# as usual
+shell> abs
+# lots of output here</pre>
+<p>Then copy the net-snmpd package to a custom location:</p>
+<pre>shell> cp -r /var/abs/extra/net-snmpd ~/abs_workspace
+shell> cd ~/abs_workspace/net-snmp</pre>
+<p>Now&nbsp;edit the&nbsp;PKGBUILD&nbsp;and look for the line starting the flag&nbsp;<code>--with-mib-modules</code> and append <code>ucd-snmp/lmsensorsMib</code> to it. As of date, it is line #44 and the resulting line is</p>
+<pre>--with-mib-modules="host misc/ipfwacc ucd-snmp/diskio tunnel ucd-snmp/dlmod ucd-snmp/lmsensorsMib" \</pre>
+<p>Now build the package and install it:</p>
+<pre>shell> makepkg -s --skippgpcheck
+shell> pacman -U
+shell> systemctl daemon-reload
+shell> systemctl restart</pre>
+<p>Now for the test:</p>
+<pre>shell> snmpwalk -v 2c -c public localhost lmSensors
+# following is just a sample of the line&nbsp;you should get:
+LM-SENSORS-MIB::lmTempSensorsIndex.1 = INTEGER: 1
+LM-SENSORS-MIB::lmTempSensorsDevice.1 = STRING: Physical id 0
+LM-SENSORS-MIB::lmTempSensorsValue.1 = Gauge32: 33000</pre>
+<p>You may have notice I used the <code>--skippgpcheck</code> flag with <code>makepkg</code>. See <a href="http://allanmcrae.com/2015/01/two-pgp-keyrings-for-package-management-in-arch-linux/" target="_blank" rel="noopener">this post</a> for more information.</p>

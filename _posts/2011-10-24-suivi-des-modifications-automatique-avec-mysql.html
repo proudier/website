@@ -1,0 +1,21 @@
+---
+layout: post
+title: Suivi des modifications automatique avec MySQL
+categories:
+- Mod&eacute;lisation
+tags:
+- MySQL
+- SQL
+- Timestamp
+comments: []
+---
+<p>J'ai d&eacute;couvert, par hasard, un moyen tr&egrave;s simple de m&eacute;moriser la date de cr&eacute;ation et de derni&egrave;re modification d'un enregistrement. Le tout, sans alourdir la requ&ecirc;te SQL, ni en ayant recours &agrave; du PL/SQL.</p>
+<p>Ces informations sont tr&egrave;s utiles pour nettoyer les bases de donn&eacute;e de dev et parfois de test. En effet, les base de dev sont souvent remplies de donn&eacute;es incoh&eacute;rentes, cr&eacute;&eacute;s par des versions bogg&eacute;es d'une application.<!--more--></p>
+<p>Pour avoir la date de cr&eacute;ation, ajoutez une colonne:<br />
+[sql toolbar="false"]date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,[/sql]<br />
+Pour avoir la date de derni&egrave;re modification:<br />
+[sql toolbar="false"]date_derniere_modif TIMESTAMP DEFAULT 0 ON UPDATE CURRENT_TIMESTAMP[/sql]<br />
+Notez qu'il n'est pas possible d'avoir deux colonnes utilisant CURRENT_TIMESTAMP, il est donc int&eacute;ressant d'enregistrer les date de cr&eacute;ation et date de derni&egrave;re modification dans la m&ecirc;me colonne:<br />
+[sql toolbar="false"]date_edition TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP[/sql]<br />
+Pour rappel, un TIMESTAMP repr&eacute;sente le nombre de seconde depuis le 1er janvier 1970 &agrave; 00h00 UTC. N'oubliez pas que les TIMESTAMP sont convertis lorsqu'ils sont lus depuis la BDD.</p>
+<p>Pour plus d'informations, voir <a href="http://dev.mysql.com/doc/refman/5.1/en/timestamp.html" target="_blank">la page de manuel sur les TIMESTAMP</a>.</p>

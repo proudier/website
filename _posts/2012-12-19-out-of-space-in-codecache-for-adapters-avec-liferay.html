@@ -1,0 +1,77 @@
+---
+layout: post
+title: '"out of space in CodeCache for adapters" avec Liferay'
+categories:
+- Administration
+tags:
+- JVM
+- Liferay
+comments: []
+---
+<p>Si vous rencontrez les exceptions suivantes:</p>
+<blockquote><p><code>java.lang.VirtualMachineError: out of space in CodeCache for adapters</code></p></blockquote>
+<p>puis</p>
+<blockquote><p><code>Illegal constant pool index</code></p></blockquote>
+<p>avec Liferay, sachez qu'il suffit de d'ajouter le param&egrave;tre <code>-XX:ReservedCodeCacheSize=96m</code> au d&eacute;marrage de la JVM pour r&eacute;gler le probl&egrave;me.<!--more--></p>
+<p>Voici le stack trace complet:<br />
+[text toolbar="false"]<br />
+SEVERE: Servlet.service() for servlet PdfSingleServlet threw exception<br />
+java.lang.VirtualMachineError: out of space in CodeCache for adapters<br />
+at com.lowagie.text.pdf.PdfWriter.(Unknown Source)<br />
+at com.lowagie.text.pdf.PdfWriter.getInstance(Unknown Source)<br />
+at QaB.PdfSingleServlet.doGet(Unknown Source)<br />
+at javax.servlet.http.HttpServlet.service(HttpServlet.java:617)<br />
+at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)<br />
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)<br />
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)<br />
+at com.liferay.portal.kernel.servlet.filters.invoker.InvokerFilterChain.doFilter(InvokerFilterChain.java:72)<br />
+at com.liferay.portal.kernel.servlet.filters.invoker.InvokerFilterChain.doFilter(InvokerFilterChain.java:116)<br />
+at com.liferay.portal.kernel.servlet.filters.invoker.InvokerFilter.doFilter(InvokerFilter.java:71)<br />
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:235)<br />
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)<br />
+at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)<br />
+at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)<br />
+at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)<br />
+at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)<br />
+at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)<br />
+at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:293)<br />
+at org.apache.jk.server.JkCoyoteHandler.invoke(JkCoyoteHandler.java:190)<br />
+at org.apache.jk.common.HandlerRequest.invoke(HandlerRequest.java:291)<br />
+at org.apache.jk.common.ChannelSocket.invoke(ChannelSocket.java:776)<br />
+at org.apache.jk.common.ChannelSocket.processConnection(ChannelSocket.java:705)<br />
+at org.apache.jk.common.ChannelSocket$SocketConnection.runIt(ChannelSocket.java:898)<br />
+at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:690)<br />
+at java.lang.Thread.run(Thread.java:679)<br />
+[/text]</p>
+<p>Suite &agrave; cette exception, des erreurs "<code>Illegal constant pool index</code>" pullulaient dans les logs:<br />
+[text toolbar="false"]<br />
+SEVERE: Servlet.service() for servlet PdfSingleServlet threw exception<br />
+java.lang.VerifyError: (class: com/lowagie/text/pdf/PdfContentByte, method: variableRectangle signature: (Lcom/lowagie/text/Rectangle;)V) Illegal constant pool index<br />
+at com.lowagie.text.pdf.PdfWriter.<init>(Unknown Source)<br />
+at com.lowagie.text.pdf.PdfWriter.getInstance(Unknown Source)<br />
+at QaB.PdfSingleServlet.doGet(Unknown Source)<br />
+at javax.servlet.http.HttpServlet.service(HttpServlet.java:617)<br />
+at javax.servlet.http.HttpServlet.service(HttpServlet.java:717)<br />
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)<br />
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)<br />
+at com.liferay.portal.kernel.servlet.filters.invoker.InvokerFilterChain.doFilter(InvokerFilterChain.java:72)<br />
+at com.liferay.portal.kernel.servlet.filters.invoker.InvokerFilterChain.doFilter(InvokerFilterChain.java:116)<br />
+at com.liferay.portal.kernel.servlet.filters.invoker.InvokerFilter.doFilter(InvokerFilter.java:71)<br />
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:235)<br />
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)<br />
+at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)<br />
+at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)<br />
+at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)<br />
+at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)<br />
+at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)<br />
+at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:293)<br />
+at org.apache.jk.server.JkCoyoteHandler.invoke(JkCoyoteHandler.java:190)<br />
+at org.apache.jk.common.HandlerRequest.invoke(HandlerRequest.java:291)<br />
+at org.apache.jk.common.ChannelSocket.invoke(ChannelSocket.java:776)<br />
+at org.apache.jk.common.ChannelSocket.processConnection(ChannelSocket.java:705)<br />
+at org.apache.jk.common.ChannelSocket$SocketConnection.runIt(ChannelSocket.java:898)<br />
+at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:690)<br />
+at java.lang.Thread.run(Thread.java:679)<br />
+[/text]</p>
+<p>Pendant ce temps, les parties tr&egrave;s utilis&eacute;es du portail &eacute;taient normalement accessibles, aucun probl&egrave;me de performance. Par contre, toute requ&ecirc;te concernant le reste se terminaient en HTTP 500...</p>
+<p>L'erreur a eu lieu sur un Liferay 6.1.10 EE contenant un certain nombre de modifications "in-house". 239 porlets diff&eacute;rentes sont d&eacute;ploy&eacute;es, donc les ~110 porlets officielles. OpenJDK 6.0_22-b22. CentOS 6.2.</p>

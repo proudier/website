@@ -1,0 +1,18 @@
+---
+layout: post
+title: Purging former kernel versions on CentOS, Fedora, RedHat (RHEL)
+categories:
+- Administration
+tags:
+- Linux
+- CentOS
+- Fedora
+- RedHat
+- RHEL
+comments: []
+---
+<p>How to purge the old, not-used-anymore versions of the Linux kernel on Fedora, CentOS and RedHat (RHEL), in one line.<!--more--></p>
+<p><code>package-cleanup --oldkernels --count=2</code></p>
+<p>Requires the <code>yum-utils</code> package to be installed.</p>
+<p><em>2</em> is the number of version you want to keep, including the lastest version. In other word a value of 2 means 1 active kernel and 1 former version.</p>
+<p><a href="http://www.if-not-true-then-false.com/2012/delete-remove-old-kernels-on-fedora-centos-red-hat-rhel/" target="_blank">Link to source.</a> Thank you JR.</p>

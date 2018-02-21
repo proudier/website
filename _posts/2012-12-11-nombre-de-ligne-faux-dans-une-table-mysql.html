@@ -1,0 +1,14 @@
+---
+layout: post
+title: Nombre de ligne faux dans une table MySQL
+categories:
+- Tips &amp; tricks
+tags:
+- HeidiSQL
+- MySQL
+comments: []
+---
+<p>Petite surprise tout &agrave; l'heure, alors que j'utilisais <a href="http://www.heidisql.com/" target="_blank">HeidiSQL</a>: le nombre d'enregistrement dans la table changeait &agrave; chaque fois que j'appuyais sur refresh. Mais pas de quelques enregistrements, non, non! A coup de 250 000 enregistrements, sur une table de 1.4&nbsp;millions.<!--more--></p>
+<p>Je cru d'abord &agrave; un bug de HeidiSQL; j'ai vraiment une confiance limit&eacute;e dans ce genre d'outil. Mais un coll&egrave;gue me fit remarquer que &ccedil;a venait de MySQL.</p>
+<blockquote><p>The number of rows. Some storage engines, such as <code>MyISAM</code>, store the exact count. For other storage engines, such as <code>InnoDB</code>, this value is an approximation, and may vary from the actual value by as much as 40 to 50%.</p></blockquote>
+<p>Il faut utiliser&nbsp;<code>SELECT COUNT(*)</code> pour avoir la vraie valeur.</p>

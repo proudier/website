@@ -1,0 +1,31 @@
+---
+layout: post
+title: Improve CAS logging performance
+categories:
+- Administration
+tags:
+- CAS
+- Log4j
+- Performance
+comments: []
+---
+<p><a href="http://www.jasig.org/cas" target="_blank">Jasig CAS</a> uses <a href="http://logging.apache.org/log4j/1.2/" target="_blank">Log4j</a> to fulfill its logging needs.</p>
+<p>The default configuration does not make use of Log4j buffering capabilities, generating a lot of I/O requests on a busy server.<!--more--></p>
+<p>The configuration is stored in the file <code>cas-server-webapp/src/main/webapp/WEB-INF/classes/log4j.xml</code></p>
+<p>It uses a <code><a href="http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/RollingFileAppender.html" target="_blank">RollingFileAppender</a></code> by default.</p>
+<p>In order to enable buffering, one simply has to define the following boolean attribute: <code><a href="http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/FileAppender.html#bufferedIO" target="_blank">BufferedIO</a>.</code><br />
+The default buffer size is 8k. It can be customized using the <code><a href="http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/FileAppender.html#bufferSize" target="_blank">BufferSize</a></code> attribute.</p>
+<p>This is what it look like, based on CAS 3.5.2 default configuration:</p>
+<p>[xml toolbar="false"]</p>
+<p><appender name="cas"></p>
+<param name="File" value="cas.log" />
+<param name="MaxFileSize" value="512KB" />
+<param name="MaxBackupIndex" value="3" />
+<layout></p>
+<param name="ConversionPattern" value="%d %p [%c] - %m%n"/>
+</layout></p>
+<param name="BufferedIO" value="TRUE" />
+<param name="BufferSize" value="32K" />
+</appender></p>
+<p>[/xml]</p>
+<p>As usual when using buffering, be aware that you might loose data, in case of a crash. So you have to carefully consider whether the trade-off is suitable for your deployment. If you need both performance and security, you might be interested in upgrading your storage unit.</p>

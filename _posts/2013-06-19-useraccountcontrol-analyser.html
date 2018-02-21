@@ -1,0 +1,25 @@
+---
+layout: post
+title: UserAccountControl Analyser
+categories:
+- Administration
+tags:
+- Active Directory
+- LDAP
+comments: []
+---
+<p><em>UserAccountControl Analyser</em>&nbsp;is a tool I developed that describes the value of the UserAccountControl attribute in a human friendly manner. This blog story explains why I needed it and how It can help you.<!--more--></p>
+<p>I am currently deploying <a href="http://www.jasig.org/cas" target="_blank">CAS</a>, a open-source SSO solution maintained by the Jasig community. As the users are authenticated against their Windows' session using Kerberos, some configuration is required to interconnect the domain controler and CAS (creating service accounts, generating <a href="http://kb.iu.edu/data/aumh.html" target="_blank">keytabs</a>, ...)<br />
+The users are split among 30+ different domains so I have to connect as many domain controlers to CAS.</p>
+<p>The tricky part is that I do not have any access to the DC, in particuliar the <em>Active Directory Users and Computers</em> management console. No need to say troubleshooting is slow and painful...</p>
+<p>Eventually I found a way to connect to the DC: I can connect in LDAP to the AD and I identify as the service account used for the keytab. Using a LDAP browser, such as <a href="http://directory.apache.org/studio/" target="_blank">Apache Directory Studio</a>, I can retrieve some information and help sysadmins fixing the situation.</p>
+<p>But one thing quickly turned out very annoying: the userAccountControl bitfield. Thought using a bitfield instead of many boolean attribute is probably more effective in terms of storage and speed, it is not humand friendly at all! Who knows by heart what the value 8389122 means?</p>
+<p>Therefore I took the time to code a tool converting the bitfield value to a list of human-readable attributes.</p>
+<p>For example, the value 8389122 will give you the following output:</p>
+<ul>
+<li>ACCOUNTDISABLE - The user account is disabled.</li>
+<li>NORMAL_ACCOUNT - This is a default account type that represents a typical user.</li>
+<li>PASSWORD_EXPIRED - (Windows 2000/Windows Server 2003) The user's password has expired.</li>
+</ul>
+<p>Of course, the tool is free to use. Feel free to share!</p>
+<p><strong>=> Link to <a href="http://www.pierreroudier.net/user-account-control-analyser.html" target="_blank">UserAccountControl Analyser</a> <=</strong></p>

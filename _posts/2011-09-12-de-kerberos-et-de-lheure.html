@@ -1,0 +1,16 @@
+---
+layout: post
+title: De Kerberos et de l'heure
+categories:
+- Administration
+tags:
+- Active Directory
+- Kerberos
+- MacOS
+comments: []
+---
+<p>Note &agrave; moi-m&ecirc;me: pour que les op&eacute;rations Kerberos se d&eacute;roulent comme voulu, il faut que les horloges du serveur et du client n'affichent pas plus de 5 minutes d'&eacute;cart.</p>
+<p>J'ai rencontr&eacute; le probl&egrave;me suivant fin ao&ucirc;t: du jour au lendemain, un Mac n'arrivait plus &agrave; ouvrir de session aupr&egrave;s du contr&ocirc;leur de domaine Active Directory. Pourtant, dans les logs du serveur, je voyais bien apparaitre la demande de connexion. Et pire que &ccedil;a, elle &eacute;tait belle et bien accept&eacute;e par le serveur ("Ouverture de session r&eacute;seau r&eacute;ussie"). Alors que du c&ocirc;t&eacute; du mac, je n'avais le droit qu'&agrave; l'effet "secousse" de la fen&ecirc;tre d'identification, signifiant une erreur.</p>
+<p>Apr&egrave;s identification avec un compte local &agrave; la machine, j'acc&egrave;de aux logs et tombe sur des dizaines de ligne telles que:<br />
+[text toolbar="false"]DirectoryService[15]	Active Directory:  Kerberos Time Skew Too Large.  Check computer date and time![/text]</p>
+<p>En effet, le client avait 6 minutes de retard sur le serveur.. </p>

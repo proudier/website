@@ -1,0 +1,36 @@
+---
+layout: post
+title: HTTPS with Tomcat in 2 minutes
+categories:
+- Administration
+tags:
+- Tomcat
+- SSL
+comments: []
+---
+<p>Two minutes, really!<!--more--></p>
+<p>First, generate the certificate. Alias <code>tomcat</code> is used as the label to later identify this certificate. The certificate will be stored in the file <code>/opt/jks_store</code>.</p>
+<pre>keytool -keystore /opt/jks_store -genkeypair -alias tomcat -keyalg RSA -keysize 4096 -validity 99999</pre>
+<p>If you are still using Tomcat6, enter the same password for the <code>keystore password</code> and <code>key password</code>. Tomcat 6 does not support the case where they are different.</p>
+<p>Now, add a new connector for HTTPS to Tomcat&rsquo;s <code>conf/server.conf</code>:</p>
+<pre><Connector
+&nbsp;&nbsp; &nbsp;port="443"
+&nbsp;&nbsp; &nbsp;protocol="org.apache.coyote.http11.Http11NioProtocol"
+&nbsp;&nbsp; &nbsp;SSLEnabled="true"
+&nbsp;&nbsp; &nbsp;scheme="https"
+&nbsp;&nbsp; &nbsp;secure="true"
+&nbsp;&nbsp; &nbsp;keystoreFile="/opt/jks_keystore" 
+    keystorePass="$PASSWORD"
+&nbsp;&nbsp; &nbsp;keyAlias="tomcat" 
+/></pre>
+<p>Don&rsquo;t forget to replace <code>$PASSWORD</code> by the one you entered in keytool. Then restart Tomcat. You're done!</p>
+<p>Consider configuring your firewalls if you are using port-based filtering.</p>
+<p>Technically, the call to keytool has created a new keystore, a public key, the associated private key; both wrapped in a self-signed certificate, which is saved in the keystore.</p>
+<p>Note: the <code>genkeypair</code> command was called <code>genkey</code> in earlier releases of keytool.</p>
+<p>If you want to use a different value for <code>key password</code> and <code>keystore password</code>, you have to add the <code>keyPass</code> attribute to the connector element and specify the value givent for <code>key password</code>. Works with Tomcat 7+.</p>
+<p>Further reading:</p>
+<ul>
+<li><a href="http://tomcat.apache.org/tomcat-7.0-doc/ssl-howto.html" target="_blank">Tomcat SSL HowTo</a></li>
+<li><a href="http://tomcat.apache.org/tomcat-7.0-doc/config/http.html" target="_blank">Tomcat ref. doc on HTTP connector</a></li>
+<li><a href="http://docs.oracle.com/javase/7/docs/technotes/tools/solaris/keytool.html" target="_blank">Keytool ref. page</a></li>
+</ul>
