@@ -23,5 +23,7 @@ paginate:  10
 header_link_1_label: Posts
 header_link_1_href: posts.html
 
+favicon_png: favicon.png
+
 exclude:
   - wp-mig.sh
