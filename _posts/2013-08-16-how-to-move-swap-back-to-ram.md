@@ -43,7 +43,3 @@ The amount of free RAM (1934M) is bigger than the concent of the swap space (131
 It is also correct to consider the amount free RAM “-/+ buffers/cache” but, in this case, you have to evaluate the impact of lowering the available cache on your system, before continuing.
 
 Now here is the trick: disabling the swap space will force the kernel to move the content back to RAM. It can take some time, depending on the amount of data to read from the swap device. Once it is done, turn the swap back on.
-
-
-
-

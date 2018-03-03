@@ -9,6 +9,7 @@ tags:
 comments: []
 ---
 <p><em>UserAccountControl Analyser</em>&nbsp;is a tool I developed that describes the value of the UserAccountControl attribute in a human friendly manner. This blog story explains why I needed it and how It can help you.<!--more--></p>
+
 <p>I am currently deploying <a href="http://www.jasig.org/cas" target="_blank">CAS</a>, a open-source SSO solution maintained by the Jasig community. As the users are authenticated against their Windows' session using Kerberos, some configuration is required to interconnect the domain controler and CAS (creating service accounts, generating <a href="http://kb.iu.edu/data/aumh.html" target="_blank">keytabs</a>, ...)<br />
 The users are split among 30+ different domains so I have to connect as many domain controlers to CAS.</p>
 <p>The tricky part is that I do not have any access to the DC, in particuliar the <em>Active Directory Users and Computers</em> management console. No need to say troubleshooting is slow and painful...</p>
