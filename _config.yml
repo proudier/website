@@ -14,11 +14,20 @@ theme: alpha-one
 
 plugins:
   - jekyll-feed
-  - jekyll-paginate
+  - jekyll-paginate-v2
   - jekyll-minifier
 
 permalink: /:year-:month-:day/:title
-paginate:  5
+
+pagination:
+  enabled: true
+  per_page: 6
+  indexpage: 'posts'
+  permalink: 'posts_:num.html'
+  trail:
+    before: 3
+    after: 3
+
 
 header_link_1_label: Posts
 header_link_1_href: posts.html

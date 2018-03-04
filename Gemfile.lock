@@ -39,7 +39,8 @@ GEM
       htmlcompressor (~> 0.3)
       jekyll (~> 3.5)
       uglifier (~> 3.2)
-    jekyll-paginate (1.1.0)
+    jekyll-paginate-v2 (1.9.4)
+      jekyll (~> 3.0)
     jekyll-sass-converter (1.5.2)
       sass (~> 3.4)
     jekyll-watch (2.0.0)
@@ -81,7 +82,7 @@ DEPENDENCIES
   jekyll (~> 3.7.2)
   jekyll-feed
   jekyll-minifier
-  jekyll-paginate
+  jekyll-paginate-v2
   therubyracer
 
 BUNDLED WITH
