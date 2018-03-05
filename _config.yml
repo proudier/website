@@ -16,6 +16,7 @@ plugins:
   - jekyll-feed
   - jekyll-paginate-v2
   - jekyll-minifier
+  - jekyll-sitemap
 
 permalink: /:year-:month-:day/:title
 
