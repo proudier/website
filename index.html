@@ -3,10 +3,28 @@ layout: page
 ---
 
 <div class="page-header">
-    <h1>Posts</h1>
+    <h1>Bienvenue</h1>
 </div>
 
 <div style="margin: 40px" ></div>
 
-<p>Hi, I'm Pierre
-I'm a software engineer</p>
+<p>Hi! I'm Pierre, an Engineer from France, about to move to Canada (Vancouver, BC).</p>
+
+<div style="margin: 40px" ></div>
+
+<p>I'm interested in Software and what run them: Systems. I love to build Solutions from the ground up, writing/tuning all the layers. Performance and Reliability is a source of Fun for my brain.</p>
+<p>I'm also interested in the People writing the software and their organization. Among many others, Jurgen Appelo and Daniel Pink are source of inspiration (not to forget <a href="http://enjoyagile.com/">Alexandre Thibault</a>).</p>
+<p> You can learn more about me on <a href="https://www.linkedin.com/in/pierreroudier">LinkedIn </a>
+    or follow me on <a href="https://twitter.com/proudier">Twitter</a>. My public repositories can be found on <a href="https://github.com/proudier/">GitHub</a>.</p>
+
+<div style="margin: 40px" ></div>
+
+<strong> Latest posts:</strong>
+<ul >
+    {% for post in site.posts limit:5 %}
+    <li>
+        <a href="{{ post.url }}">{{ post.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+
