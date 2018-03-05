@@ -39,3 +39,4 @@ exclude:
   - wp-mig.sh
   - .idea
   - .gitignore
+  - publish.sh
