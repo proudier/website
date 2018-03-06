@@ -54,4 +54,4 @@ LM-SENSORS-MIB::lmTempSensorsDevice.1 = STRING: Physical id 0
 LM-SENSORS-MIB::lmTempSensorsValue.1 = Gauge32: 33000
 ```
 
-You may have notice I used the `--skippgpcheck` flag with `makepkg`. See [this post](http://allanmcrae.com/2015/01/two-pgp-keyrings-for-package-management-in-arch-linux/) for more information.</p>
+You may have notice I used the `--skippgpcheck` flag with `makepkg`. See [this post](http://allanmcrae.com/2015/01/two-pgp-keyrings-for-package-management-in-arch-linux/) for more information.
