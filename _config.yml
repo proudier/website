@@ -18,7 +18,7 @@ plugins:
   - jekyll-minifier
   - jekyll-sitemap
 
-permalink: /:year-:month-:day/:title
+permalink: /:year/:month/:title/
 
 pagination:
   enabled: true
@@ -31,7 +31,7 @@ pagination:
 
 
 header_link_1_label: 'All posts'
-header_link_1_href: posts.html
+header_link_1_href: posts/posts.html
 
 favicon_png: favicon.png
 
