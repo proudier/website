@@ -50,7 +50,7 @@ As one can imagine, TaskProducer and ResultConsumer are specific to the reader's
 
 # Sample implementation
 
-To illustrate this design, I've shared [a sample project on GitHub](https://github.com/proudier/blog-example/tree/master/ExecutorCompletionService/src/net/pierreroudier/blog)
+To illustrate this design, I've shared [a sample project on GitHub](https://github.com/proudier/executor-completion-service-tutorial)
 
 Noteworthy items:
 - TaskParameter and TaskResult are POJO with a few attributes.
@@ -96,4 +96,3 @@ The rest of the code is pretty self-explanatory ;)
 
 
 Enjoy!
-
