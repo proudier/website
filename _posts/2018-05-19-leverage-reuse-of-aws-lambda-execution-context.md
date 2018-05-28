@@ -8,7 +8,7 @@ tags:
 - Performance
 ---
 
-Properly reusing the execution contexts on AWS Lambda will reduce the execution time of your functions. Though this article illustrate the concept with Lambdas written in Java, the principle applies to any of the supported languages.
+Properly reusing the execution contexts on AWS Lambda will reduce the execution time of your functions. Though this article illustrate the concept with lambdas written in Java, the principle applies to any of the supported languages.
 
 To understand what execution context reuse is, please consider the following lambda function:
 
@@ -79,3 +79,7 @@ To illustrate how initialization code can be refactored to leverage context reus
 Let's compare performance:
 * Cold starting an execution context take 720 ms with both implementations (which is the expected observation)
 * Later invocation of the 'better' implementation is 46% faster than the 'poor' implementation: resp. 183,24 vs 99,53 ms (average over 3 invocations with 1 second let between each)
+
+This sample project shows how a simple refactoring, allowing to take advantage of execution context resuse, can yield a substantial reduction of execution time, providing better performance for your users while generating savings on your AWS bills.
+
+Enjoy!
