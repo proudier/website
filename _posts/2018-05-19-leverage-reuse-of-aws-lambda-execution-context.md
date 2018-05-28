@@ -33,8 +33,7 @@ public class InstrumentedLambda implements RequestHandler<S3Event, String> {
 }
 ```
 
-Once published, and after three sequential invocations of the function – letting one second between each invocation – CloudWatch logs contains
-and contains the following lines:
+Once published, and after three sequential invocations of the function – letting one second between each invocation – CloudWatch logs contains the following lines:
 
  ```
  InstrumentedLambda:15 - Static initialization block
@@ -54,9 +53,9 @@ and contains the following lines:
  REPORT RequestId: 2366efc8-5b80-11e8-ac8e-797333ec52a2    Duration: 4.11 ms    Billed Duration: 100 ms Memory Size: 512 MB    Max Memory Used: 65 MB
 ```
 
-One can see that all the requests were served by the same instance of class InstrumentedLambda: `@6321e813`. Proof: Object.toString() uses Object.hashCode(), which typically converts the internal address of the object into an integer.
+One can see that all the requests were served by the same instance of class InstrumentedLambda: `@6321e813`. Proof: [Object.toString()](https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#toString--) uses [Object.hashCode()](https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html#hashCode--), which typically converts the internal address of the object into an integer.
 
-Digging deeper:
+Let's take a closer look:
 * When the first request arrives, an execution context is created; its id can be inferred from the log stream name: `2018/05/19/[$LATEST]ac9d0679f7ce4deab5ed6f13c3650d6f` -> `ac9d0679f7ce4deab5ed6f13c3650d6f`
 * The InstrumentedLambda class is loaded by the Java runtime, as revealed by the log entry from the static initialization block
 * The lambda platform instantiates the InstrumentedLambda class as shown by the log entry from initialization block and constructor
